@@ -15,7 +15,11 @@ builds:
       - amd64
 
 archives:
-  - format: tar.gz
+  - builds_info:
+      group: root
+      owner: root
+    wrap_in_directory: true
+    format: tar.gz
     # this name template makes the OS and Arch compatible with the results of uname.
     name_template: >-
       {{ .ProjectName }}_
