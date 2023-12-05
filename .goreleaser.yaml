@@ -28,10 +28,18 @@ archives:
     format_overrides:
     - goos: windows
       format: zip
+
+dockers:
+  - image_templates:
+      - "ghcr.io/derektamsen/{{.ProjectName}}:{{ .Tag }}"
+      - "ghcr.io/derektamsen/{{.ProjectName}}:latest"
+
 checksum:
   name_template: 'checksums.txt'
+
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
+
 changelog:
   sort: asc
   filters:
