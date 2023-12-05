@@ -1,4 +1,4 @@
-FROM apline:3.18
+FROM alpine:3.18
 
 RUN adduser -DH -u 1337 app
 
