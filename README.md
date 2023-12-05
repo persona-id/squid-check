@@ -1,0 +1,1 @@
+# Squid Health Checker

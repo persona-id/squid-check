@@ -1,0 +1,8 @@
+###
+GET http://localhost:8080/target
+
+###
+GET http://localhost:8080/healthz
+
+###
+GET http://localhost:8080/asdf
