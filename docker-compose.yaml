@@ -6,7 +6,7 @@ services:
     command:
       - --proxy-address=squid:3128
       - --target-address=squid-check:8080
-      # - --log-level=debug
+      - --log-level=debug
 
   squid:
     image: "ubuntu/squid:latest"

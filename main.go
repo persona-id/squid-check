@@ -4,14 +4,15 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"log"
+	"log/slog"
 	"net/http"
 	"net/url"
+	"os"
 )
 
 // cliFlags is a struct to hold the cli flags
 type cliFlags struct {
-	listenAddress, proxyAddress, targetAddress string
+	listenAddress, logLevel, proxyAddress, targetAddress string
 }
 
 // checkConfig is a struct to hold the config for the http handlers
@@ -24,6 +25,7 @@ var flags cliFlags = cliFlags{}
 
 func init() {
 	flag.StringVar(&flags.listenAddress, "listen-address", "0.0.0.0:8080", "Address to listen on")
+	flag.StringVar(&flags.logLevel, "log-level", "warn", "Log level")
 	flag.StringVar(&flags.proxyAddress, "proxy-address", "127.0.0.1:3128", "Address of squid proxy")
 	flag.StringVar(&flags.targetAddress, "target-address", "127.0.0.1:8080", "Address of proxied health check target")
 }
@@ -53,12 +55,12 @@ func (s *checkConfig) healthzHandler() http.HandlerFunc {
 		if err != nil {
 			w.WriteHeader(http.StatusBadGateway)
 			w.Write([]byte("error connecting to /target"))
-			log.Println(err)
+			slog.Error(fmt.Sprintf("%v", err))
 		}
 		defer resp.Body.Close()
 
 		// write the response body to the client
-		log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
+		slog.Debug(fmt.Sprintf("%s %s %s", r.RemoteAddr, r.Method, r.URL))
 
 		// copy headers from response to requestor
 		for k, v := range resp.Header {
@@ -77,7 +79,7 @@ func (s *checkConfig) healthzHandler() http.HandlerFunc {
 // It returns a 200 OK response with the body "healthy"
 func targetHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
+		slog.Debug(fmt.Sprintf("%s %s %s", r.RemoteAddr, r.Method, r.URL))
 
 		// prevent proxies from caching the response
 		// this will help ensure squid will always make a request to the target
@@ -86,14 +88,39 @@ func targetHandler() http.HandlerFunc {
 	}
 }
 
+// setupLogger returns a new structured logger
+func setupLogger() *slog.Logger {
+	// get logging level from cli flag
+	level := slog.LevelWarn
+	switch flags.logLevel {
+	case "debug":
+		level = slog.LevelDebug
+	case "error":
+		level = slog.LevelError
+	case "info":
+		level = slog.LevelInfo
+	case "warn":
+		level = slog.LevelWarn
+	}
+
+	loggerOpts := &slog.HandlerOptions{
+		Level: level,
+	}
+
+	return slog.New(slog.NewJSONHandler(os.Stdout, loggerOpts))
+}
+
 func main() {
 	// setup cli flags
 	flag.Parse()
 
+	// setup structured logging
+	slog.SetDefault(setupLogger())
+
 	// create new squid client
 	proxyUrl, err := newProxyClient(flags.proxyAddress)
 	if err != nil {
-		log.Fatalf("error creating proxy client: %v", err)
+		slog.Error(fmt.Sprintf("error creating proxy client: %v", err))
 	}
 
 	// build checkConfig for handlers
@@ -109,8 +136,11 @@ func main() {
 	mux.Handle("/target", targetHandler())
 
 	// start http server
-	log.Print("Listening...")
+	slog.Error(fmt.Sprintf("Listening on %s", flags.listenAddress))
 	// this is a health check service, so we don't want to use TLS
 	// nosemgrep: go.lang.security.audit.net.use-tls.use-tls
-	log.Fatal(http.ListenAndServe(fmt.Sprint(flags.listenAddress), mux))
+	err = http.ListenAndServe(fmt.Sprint(flags.listenAddress), mux)
+	if err != nil {
+		slog.Error(fmt.Sprintf("%v", err))
+	}
 }
