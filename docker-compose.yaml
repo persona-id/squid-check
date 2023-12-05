@@ -1,6 +1,8 @@
 services:
   squid-check:
-    build: .
+    build:
+      context: .
+      dockerfile: dev.dockerfile
     ports:
       - "8080:8080"
     command:
