@@ -51,8 +51,8 @@ Download the binary:
 
 ```shell
 # download the latest linux release of squid-check and the checksum file
-curl -L -o squid-check_Linux_x86_64.tar.gz https://github.com/derektamsen/squid-check/releases/latest/download/squid-check_Linux_x86_64.tar.gz
-curl -L -o checksums.txt https://github.com/derektamsen/squid-check/releases/latest/download/checksums.txt
+curl -L -o squid-check_Linux_x86_64.tar.gz https://github.com/persona-id/squid-check/releases/latest/download/squid-check_Linux_x86_64.tar.gz
+curl -L -o checksums.txt https://github.com/persona-id/squid-check/releases/latest/download/checksums.txt
 
 
 # check the shasum and extract it if it matches
@@ -96,7 +96,7 @@ Suggested installation:
 We pre-build a container image for squid-check. It can be used in conjunction with a squid kubernetes deployment.
 
 ```shell
-docker pull ghcr.io/derektamsen/squid-check:latest
+docker pull ghcr.io/persona-id/squid-check:latest
 ```
 
 ## Development

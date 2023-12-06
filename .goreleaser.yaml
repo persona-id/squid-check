@@ -35,8 +35,8 @@ archives:
 
 dockers:
   - image_templates:
-      - "ghcr.io/derektamsen/{{.ProjectName}}:{{ .Tag }}"
-      - "ghcr.io/derektamsen/{{.ProjectName}}:latest"
+      - "ghcr.io/persona-id/{{.ProjectName}}:{{ .Tag }}"
+      - "ghcr.io/persona-id/{{.ProjectName}}:latest"
 
 checksum:
   name_template: 'checksums.txt'
