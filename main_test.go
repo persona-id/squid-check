@@ -60,6 +60,33 @@ func mockProxy(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, resp.Body)
 }
 
+// TestNewBuildInfo suite to test creating a new buildInfo struct
+func TestNewBuildInfo(t *testing.T) {
+	cases := []struct {
+		name     string
+		expected *buildInfo
+	}{
+		{
+			name: "returnsBuildInfoWithDefaultValues",
+			expected: &buildInfo{
+				goVersion: "unknown",
+				version:   "unknown",
+			},
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := newBuildInfo()
+
+			// compare expected to actual
+			if !reflect.DeepEqual(got, tc.expected) {
+				t.Errorf("got %v; expect %v", got, tc.expected)
+			}
+		})
+	}
+}
+
 // TestNewProxyClient suite to test creating a new proxy client
 func TestNewProxyClient(t *testing.T) {
 	cases := []struct {
