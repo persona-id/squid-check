@@ -37,6 +37,8 @@ Usage of /usr/local/bin/squid-check:
         Address of squid proxy (default "127.0.0.1:3128")
   -target-address string
         Address of proxied health check target (default "127.0.0.1:8080")
+  -version
+        Print version and exit
 ```
 
 ## Installation
@@ -107,3 +109,10 @@ To use the environment:
 
 1. `docker-compose up --build`
 2. Make requests to `http://localhost:8080/healthz` or another endpoint served by squid-check. If you have the vscode rest client installed you can use `http_client_tests.rest` to send requests to the various endpoints.
+
+## Releasing
+
+The project is using [goreleaser](https://goreleaser.com) and will automatically publish a release on new tag push. Currently, it builds both a linux binary and a container image.
+
+1. `git tag -a vX.Y.Z`
+2. `git push origin vX.Y.Z`

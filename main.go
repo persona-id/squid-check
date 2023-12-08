@@ -8,16 +8,23 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"runtime/debug"
 )
 
 // cliFlags is a struct to hold the cli flags
 type cliFlags struct {
 	listenAddress, logLevel, proxyAddress, targetAddress string
+	version                                              bool
 }
 
 // checkConfig is a struct to hold the config for the http handlers
 type checkConfig struct {
 	proxyClient *http.Client
+}
+
+// buildInfo is a struct to hold the build information
+type buildInfo struct {
+	goVersion, version string
 }
 
 // flags holds the global set cli flags
@@ -28,6 +35,15 @@ func init() {
 	flag.StringVar(&flags.logLevel, "log-level", "warn", "Log level")
 	flag.StringVar(&flags.proxyAddress, "proxy-address", "127.0.0.1:3128", "Address of squid proxy")
 	flag.StringVar(&flags.targetAddress, "target-address", "127.0.0.1:8080", "Address of proxied health check target")
+	flag.BoolVar(&flags.version, "version", false, "Print version and exit")
+}
+
+// newBuildInfo returns a new buildInfo struct with default values
+func newBuildInfo() *buildInfo {
+	return &buildInfo{
+		goVersion: "unknown",
+		version:   "unknown",
+	}
 }
 
 // newProxyClient returns a new http client configured to use squid
@@ -114,6 +130,19 @@ func main() {
 	// setup cli flags
 	flag.Parse()
 
+	// get build information. If build info is not available, use default values
+	buildInfo := newBuildInfo()
+	if goBuildInfo, ok := debug.ReadBuildInfo(); ok {
+		buildInfo.goVersion = goBuildInfo.GoVersion
+		buildInfo.version = goBuildInfo.Main.Version
+	}
+
+	// print version and exit
+	if flags.version {
+		fmt.Printf("squid-check version %s built with %s", buildInfo.version, buildInfo.goVersion)
+		os.Exit(0)
+	}
+
 	// setup structured logging
 	slog.SetDefault(setupLogger())
 
@@ -136,7 +165,12 @@ func main() {
 	mux.Handle("/target", targetHandler())
 
 	// start http server
-	slog.Error(fmt.Sprintf("Listening on %s", flags.listenAddress))
+	slog.Error(fmt.Sprintf(
+		"version %s built with %s, Listening on %s",
+		buildInfo.version,
+		buildInfo.goVersion,
+		flags.listenAddress,
+	))
 	// this is a health check service, so we don't want to use TLS
 	// nosemgrep: go.lang.security.audit.net.use-tls.use-tls
 	err = http.ListenAndServe(fmt.Sprint(flags.listenAddress), mux)
