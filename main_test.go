@@ -130,8 +130,10 @@ func TestNewProxyClient(t *testing.T) {
 // TestHealthzHandler suite to test the /healthz handler
 func TestHealthzHandler(t *testing.T) {
 	cases := []struct {
-		name   string
-		expect expectHttp
+		name             string
+		expect           expectHttp
+		customTargetPath string
+
 	}{
 		{
 			name: "returnsSuccessWithHttp200",
@@ -143,7 +145,21 @@ func TestHealthzHandler(t *testing.T) {
 				},
 				statusCode: http.StatusOK,
 			},
+			customTargetPath: "/target",  // default
 		},
+		{
+			name: "returnsSuccessWithHttp200",
+			expect: expectHttp{
+				body: "success",
+				header: map[string][]string{
+					"Cache-Control": {"no-store"},
+					"Content-Type":  {"text/plain; charset=utf-8"},
+				},
+				statusCode: http.StatusOK,
+			},
+			customTargetPath: "/differentEndpoint",  // default
+		},
+
 	}
 
 	for _, tc := range cases {
@@ -160,8 +176,8 @@ func TestHealthzHandler(t *testing.T) {
 							t.Errorf("got %v; expect %v", r.Method, http.MethodGet)
 						}
 
-						if r.URL.Path != "/target" {
-							t.Errorf("got %v; expect %v", r.URL.Path, "/target")
+						if r.URL.Path != tc.customTargetPath {
+							t.Errorf("got %v; expect %v", r.URL.Path, tc.customTargetPath)
 						}
 					},
 				),
@@ -172,6 +188,7 @@ func TestHealthzHandler(t *testing.T) {
 			mockProxy := httptest.NewServer(http.HandlerFunc(mockProxy))
 
 			flags.targetAddress = mockTarget.Listener.Addr().String()
+			flags.targetPath = tc.customTargetPath
 			flags.proxyAddress = mockProxy.Listener.Addr().String()
 			proxyAddress, _ := url.Parse(fmt.Sprintf("http://%s", flags.proxyAddress))
 

@@ -13,8 +13,8 @@ import (
 
 // cliFlags is a struct to hold the cli flags
 type cliFlags struct {
-	listenAddress, logLevel, proxyAddress, targetAddress string
-	version                                              bool
+	listenAddress, logLevel, proxyAddress, targetAddress, targetPath string
+	version                                                          bool
 }
 
 // checkConfig is a struct to hold the config for the http handlers
@@ -35,6 +35,7 @@ func init() {
 	flag.StringVar(&flags.logLevel, "log-level", "warn", "Log level")
 	flag.StringVar(&flags.proxyAddress, "proxy-address", "127.0.0.1:3128", "Address of squid proxy")
 	flag.StringVar(&flags.targetAddress, "target-address", "127.0.0.1:8080", "Address of proxied health check target")
+	flag.StringVar(&flags.targetPath, "target-path", "/target", "Address of proxied health check target path. i.e /target")
 	flag.BoolVar(&flags.version, "version", false, "Print version and exit")
 }
 
@@ -66,11 +67,11 @@ func newProxyClient(address string) (*http.Client, error) {
 // by this application. If the connection is successful, it returns a 200 OK
 func (s *checkConfig) healthzHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// request /target via the proxy client
-		resp, err := s.proxyClient.Get(fmt.Sprintf("http://%s/target", flags.targetAddress))
+		// request targetPath via the proxy client
+		resp, err := s.proxyClient.Get(fmt.Sprintf("http://%s%s", flags.targetAddress, flags.targetPath))
 		if err != nil {
 			w.WriteHeader(http.StatusBadGateway)
-			w.Write([]byte("error connecting to /target"))
+			w.Write([]byte(fmt.Sprintf("error connecting to %s", flags.targetPath)))
 			slog.Error(fmt.Sprintf("%v", err))
 		}
 		defer resp.Body.Close()
