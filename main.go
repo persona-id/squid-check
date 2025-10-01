@@ -166,7 +166,7 @@ func main() {
 	mux.Handle("/target", targetHandler())
 
 	// start http server
-	slog.Error(fmt.Sprintf(
+	slog.Info(fmt.Sprintf(
 		"version %s built with %s, Listening on %s",
 		buildInfo.version,
 		buildInfo.goVersion,
