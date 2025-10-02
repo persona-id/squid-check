@@ -32,7 +32,7 @@ var flags cliFlags = cliFlags{}
 
 func init() {
 	flag.StringVar(&flags.listenAddress, "listen-address", "0.0.0.0:8080", "Address to listen on")
-	flag.StringVar(&flags.logLevel, "log-level", "warn", "Log level")
+	flag.StringVar(&flags.logLevel, "log-level", "info", "Log level")
 	flag.StringVar(&flags.proxyAddress, "proxy-address", "127.0.0.1:3128", "Address of squid proxy")
 	flag.StringVar(&flags.targetAddress, "target-address", "127.0.0.1:8080", "Address of proxied health check target")
 	flag.StringVar(&flags.targetPath, "target-path", "/target", "Address of proxied health check target path. i.e /target")
