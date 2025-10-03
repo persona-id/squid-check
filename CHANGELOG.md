@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/persona-id/squid-check/compare/v0.1.0...v0.2.0) (2025-10-03)
+
+
+### Features
+
+* forcing new release to include recent changes for 0.2.0 ([#13](https://github.com/persona-id/squid-check/issues/13)) ([65ca2d9](https://github.com/persona-id/squid-check/commit/65ca2d9f9aa673f237528aa8e1851379dd2aba96))
+
 ## [0.1.0](https://github.com/persona-id/squid-check/compare/v0.0.2...v0.1.0) (2024-07-05)
 
 
