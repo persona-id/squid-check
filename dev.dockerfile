@@ -1,7 +1,7 @@
 # build stage
-FROM golang:1.21.4-alpine3.18 AS build
+FROM golang:1.25.1-trixie AS build
 
-RUN adduser -DH -u 1337 app
+RUN useradd --no-create-home -u 1337 -p '*' app
 
 WORKDIR /usr/src/app
 
@@ -13,9 +13,10 @@ COPY . .
 RUN go build -v -o /usr/local/bin/squid-check ./...
 
 # run stage
-FROM scratch
+FROM debian:13.1-slim
 
-COPY --from=build /etc/passwd /etc/passwd
+RUN useradd --no-create-home -u 1337 -p '*' app
+
 COPY --from=build /usr/local/bin/squid-check /usr/local/bin/squid-check
 
 USER 1337
