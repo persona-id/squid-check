@@ -1,14 +1,16 @@
 services:
+  squid:
+    image: "ubuntu/squid:latest"
+
   squid-check:
     build:
       context: .
       dockerfile: dev.dockerfile
-    ports:
-      - "8080:8080"
+    depends_on:
+      - squid
     command:
       - --proxy-address=squid:3128
       - --target-address=squid-check:8080
       - --log-level=debug
-
-  squid:
-    image: "ubuntu/squid:latest"
+    ports:
+      - "8080:8080"

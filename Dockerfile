@@ -1,8 +1,13 @@
-FROM alpine:3.18
+FROM debian:13.1-slim
 
-RUN adduser -DH -u 1337 app
+# Goreleaser builds a multi-arch binary and copies them into the image.
+# The arch binaries are sorted into directories after the build arch
+# https://goreleaser.com/customization/dockers_v2
+ARG TARGETPLATFORM
 
-COPY squid-check /usr/local/bin/squid-check
+RUN useradd --no-create-home -u 1337 -p '*' app
+
+COPY $TARGETPLATFORM/squid-check /usr/local/bin/squid-check
 
 USER 1337
 
