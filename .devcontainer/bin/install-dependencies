@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+go install github.com/goreleaser/goreleaser/v2@latest

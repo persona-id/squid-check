@@ -1,0 +1,35 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/debian
+{
+	"customizations": {
+		"vscode": {
+			// Enable some extensions inside the devcontainer.
+			"extensions": [
+				"golang.go"
+			]
+		}
+	},
+	"dockerComposeFile": [
+		"../docker-compose.yaml",
+		"docker-compose.devcontainer.yaml"
+	],
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/devcontainers/features/go:1": {
+			"version": "1.25.1"
+		}
+	},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [8080],
+	"name": "squid-check",
+	// Install extra packages we might need that do not have a feature.
+	"postCreateCommand": "bash -i .devcontainer/bin/install-dependencies",
+	// list of docker compose services to start
+	"runServices": [
+		"squid"
+	],
+	// the docker compose service to use as the dev container
+	"service": "devcontainer",
+	// default path for the devcontainer
+	"workspaceFolder": "/workspace"
+}

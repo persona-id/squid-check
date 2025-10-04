@@ -32,7 +32,7 @@ Usage of /usr/local/bin/squid-check:
   -listen-address string
         Address to listen on (default "0.0.0.0:8080")
   -log-level string
-        Log level (default "warn")
+        Log level (default "info")
   -proxy-address string
         Address of squid proxy (default "127.0.0.1:3128")
   -target-address string
@@ -103,11 +103,20 @@ docker pull ghcr.io/persona-id/squid-check:latest
 
 ## Development
 
+### Devcontainer
+
+If you are using vscode you can develop in the devcontainer included in the repo. The devcontainer in this repo will connect you to a debian devcontainer instance with go already installed. There is also a docker compose sidecar that is attached to the same network running squid. This allows developing squid-check changes directly against a local instance of squid without any additional setup.
+
+1. When prompted by vscode, choose to re-open in a container. This will relaunch your ide and attach it to the `devconatiner` service.
+2. If you would like to run squid-check use `make run`. You can also run tests in the container with `make test`.
+
+### Docker Compose
+
 There is a docker compose file to provide a local development environment. The compose file consists of a container running `squid-check` and an additional container running squid.
 
 To use the environment:
 
-1. `docker-compose up --build`
+1. `docker compose up --build`
 2. Make requests to `http://localhost:8080/healthz` or another endpoint served by squid-check. If you have the vscode rest client installed you can use `http_client_tests.rest` to send requests to the various endpoints.
 
 ## Releasing
