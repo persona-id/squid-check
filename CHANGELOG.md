@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/persona-id/squid-check/compare/v0.2.0...v0.3.0) (2025-10-06)
+
+
+### Features
+
+* update to go 1.25.1, cleanup container images, add devcontainer ([#15](https://github.com/persona-id/squid-check/issues/15)) ([9fb1e2e](https://github.com/persona-id/squid-check/commit/9fb1e2e8ea9506ae7590e2a1eabc9fa7050b183a))
+
 ## [0.2.0](https://github.com/persona-id/squid-check/compare/v0.1.0...v0.2.0) (2025-10-03)
 
 
