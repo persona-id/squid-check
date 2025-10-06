@@ -7,6 +7,11 @@
 
 * forcing new release to include recent changes for 0.2.0 ([#13](https://github.com/persona-id/squid-check/issues/13)) ([65ca2d9](https://github.com/persona-id/squid-check/commit/65ca2d9f9aa673f237528aa8e1851379dd2aba96))
 
+
+### Bug Fixes
+
+* startup message log level ([#12](https://github.com/persona-id/squid-check/issues/12)) ([4bdc55a](https://github.com/persona-id/squid-check/commit/4bdc55a727db2a1f37d9c1d11e8a454e5b0207d3))
+
 ## [0.1.0](https://github.com/persona-id/squid-check/compare/v0.0.2...v0.1.0) (2024-07-05)
 
 
