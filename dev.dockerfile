@@ -1,5 +1,5 @@
 # build stage
-FROM golang:1.25.1-trixie AS build
+FROM golang:1.25.2-trixie AS build
 
 RUN useradd --no-create-home -u 1337 -p '*' app
 
