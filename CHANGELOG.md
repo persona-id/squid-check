@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/persona-id/squid-check/compare/v0.3.0...v0.3.1) (2025-10-20)
+
+
+### Bug Fixes
+
+* **deps:** bump golang from 1.25.2-trixie to 1.25.3-trixie ([#20](https://github.com/persona-id/squid-check/issues/20)) ([a0a6c5a](https://github.com/persona-id/squid-check/commit/a0a6c5a3a2e743b5d70df5e0b5ba9885ae6f8e77))
+
 ## [0.3.0](https://github.com/persona-id/squid-check/compare/v0.2.0...v0.3.0) (2025-10-06)
 
 
