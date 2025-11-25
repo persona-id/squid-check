@@ -1,4 +1,4 @@
-FROM debian:13.1-slim
+FROM debian:13.2-slim
 
 # Goreleaser builds a multi-arch binary and copies them into the image.
 # The arch binaries are sorted into directories after the build arch
