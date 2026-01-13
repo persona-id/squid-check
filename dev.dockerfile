@@ -13,7 +13,7 @@ COPY . .
 RUN go build -v -o /usr/local/bin/squid-check ./...
 
 # run stage
-FROM debian:13.2-slim
+FROM debian:13.3-slim
 
 RUN useradd --no-create-home -u 1337 -p '*' app
 
